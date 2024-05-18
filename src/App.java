@@ -54,7 +54,7 @@ public class App {
 
             // Verificando se o assento está disponível e realizando a reserva
             if (assento.reservar()) {
-                double preco = (fileira <= 5) ? 500.00 : 250.00;
+                double preco = (fileira <= 5) ? 3000.00 : 250.00;
                 System.out.println("Assento reservado com sucesso. Valor da reserva: R$" + preco);
             } else {
                 System.out.println("Assento ocupado. Escolha outro assento.");
