@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class App {
@@ -15,40 +17,48 @@ public class App {
     de forma que AssentoEconomico e AssentoPrimeiraClasse sejam classes diferentes."    
 */
 
-        // Criar matriz para representar os assentos da aeronave
-        Assento[][] assentos = new Assento[20][11];
-        // Inicializar todos os assentos como econômicos
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 11; j++) {
-                assentos[i][j] = new AssentoEconomico();
+        // Mapa para armazenar os assentos - Esse foi novidade, mas entendi como utilizar 
+        Map<String, Assento> assentos = new HashMap<>();
+
+        // Preenchendo o mapa com os assentos
+        for (int i = 1; i <= 20; i++) {
+            for (int j = 1; j <= 11; j++) {
+                Assento assento;
+                if (i <= 5) {
+                    assento = new AssentoPrimeiraClasse();
+                } else {
+                    assento = new AssentoEconomico();
+                }
+                assentos.put(i + " " + j, assento);
             }
         }
 
-        // Inicializar os assentos das cinco primeiras fileiras como primeira classe
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 11; j++) {
-                assentos[i][j] = new AssentoPrimeiraClasse();
-            }
-        }
-
-        // Pedir ao usuário para informar a fileira e a poltrona desejadas
+        // Scanner para entrada do usuário
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Informe a fileira e a poltrona desejadas (exemplo: 5 10):");
-        int fileira = scanner.nextInt() - 1; // Subtrair 1 para converter para índice de matriz
-        int poltrona = scanner.nextInt() - 1; // Subtrair 1 para converter para índice de matriz
 
-        // Verificar se o assento está livre e reservá-lo, ou informar que está ocupado
-        if (fileira >= 0 && fileira < 20 && poltrona >= 0 && poltrona < 11) {
-            if (assentos[fileira][poltrona].reservar()) {
-                System.out.println("Assento reservado com sucesso.");
-                // Aqui você pode adicionar a lógica para calcular e imprimir o valor da reserva
-            } else {
-                System.out.println("Assento ocupado.");
+        // Loop para interagir com o usuário
+        while (true) {
+            System.out.print("Informe a fileira e a poltrona desejadas (Ex: 5 10): ");
+            String[] input = scanner.nextLine().split(" ");
+            int fileira = Integer.parseInt(input[0]);
+            int poltrona = Integer.parseInt(input[1]);
+
+            // Verificando se a entrada é válida
+            if (fileira < 1 || fileira > 20 || poltrona < 1 || poltrona > 11) {
+                System.out.println("Fileira ou poltrona inválida. Tente novamente.");
+                continue;
             }
-        } else {
-            System.out.println("Assento inválido.");
-        }
 
-        scanner.close();
+            // Obtendo o assento desejado
+            Assento assento = assentos.get(fileira + " " + poltrona);
+
+            // Verificando se o assento está disponível e realizando a reserva
+            if (assento.reservar()) {
+                double preco = (fileira <= 5) ? 500.00 : 250.00;
+                System.out.println("Assento reservado com sucesso. Valor da reserva: R$" + preco);
+            } else {
+                System.out.println("Assento ocupado. Escolha outro assento.");
+            }
+        }
     }
 }
